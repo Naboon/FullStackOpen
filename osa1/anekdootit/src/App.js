@@ -3,6 +3,13 @@ import React, { useState } from 'react'
 const Button = ({ handleClick, text }) => 
   <button onClick={handleClick}> {text}</button>
 
+const PrintAnecdote = ({ text, count }) => {
+  return (
+    <><div>{text}</div>
+    <div>has {count} votes</div></>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -16,35 +23,47 @@ const App = () => {
    
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
-  console.log(votes)
+  const [popular, setPopular] = useState(0)
 
   const setAnecdote = () => {
+    // Valitsee satunnaisen anekdootin
     let i = Math.floor(Math.random() * anecdotes.length)
+    
+    // Vältetään saman anekdootin ilmaantuminen peräkkäin
     while (i === selected) {
       i = Math.floor(Math.random() * anecdotes.length)
     }
-
-    return (
-      setSelected(i)
-    )
+    setSelected(i)
   }
 
   const addVote = () => {
+    // Lisää äänen taulukkoon ja laskee eniten ääniä saaneen anekdootin
     const voteArray = [...votes]
     voteArray[selected] += 1
-    return (
-      setVotes(voteArray)
-    )
+    setVotes(voteArray)
+
+    let max = voteArray[0]
+    let maxI = 0
+
+    for (let i = 1; i < voteArray.length; i++) {
+      if (voteArray[i] > max) {
+        maxI = i
+        max = voteArray[i]
+      }
+    }
+    setPopular(maxI)
   }
   
   return (
     <div>
-      {anecdotes[selected]}
-      <div>has {votes[selected]} votes</div>
+      <h1>Anecdote of the day</h1>
+      <PrintAnecdote text={anecdotes[selected]} count={votes[selected]} />
       <div>
         <Button handleClick={addVote} text='vote' />
         <Button handleClick={setAnecdote} text='next anecdote' />
       </div>
+      <h1>Anecdote with most votes</h1>
+      <PrintAnecdote text={anecdotes[popular]} count={votes[popular]} />
     </div>
   )
 }
