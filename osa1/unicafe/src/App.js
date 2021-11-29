@@ -3,14 +3,21 @@ import React, { useState } from 'react'
 const Button = ({ handleClick, text }) => 
   <button onClick={handleClick}> {text}</button>
     
-const Display = ({ text, number, endText }) => 
-  <div>{text} {number} {endText}</div>
+const Display = ({ text, number }) => 
+  <div>{text} {number}</div>
 
-const Average = ({ good, neutral, bad }) =>
-  (good - bad) / (good + neutral + bad)
-
-const PositivePortion = ({ good, neutral, bad }) =>
-  100 * good / (good + neutral + bad)
+const Statistics = (props) => {
+  return (
+    <><div>
+      average {(props.good - props.bad) / (props.good + 
+        props.neutral + props.bad)}
+    </div>
+    <div>
+      positive {100 * props.good / (props.good + props.neutral + 
+        props.bad)} %
+    </div></>
+  )
+}
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -32,14 +39,11 @@ const App = () => {
       <Button handleClick={badFeedback} 
         text='bad' />
       <h1>statistics</h1>
-      <Display text='good' number={good} endText='' />
-      <Display text='neutral' number={neutral} endText='' />
-      <Display text='bad' number={bad} endText='' />
-      <Display text='all' number={good + neutral + bad} endText='' />
-      <Display text='average' number={<Average good={good}
-        neutral={neutral} bad={bad} />} endText='' />
-      <Display text='positive' number={<PositivePortion good={good}
-        neutral={neutral} bad={bad} />} endText='%' />
+      <Display text='good' number={good} />
+      <Display text='neutral' number={neutral} />
+      <Display text='bad' number={bad} />
+      <Display text='all' number={good + neutral + bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
