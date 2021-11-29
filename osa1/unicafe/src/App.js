@@ -9,21 +9,22 @@ const Statistics = ({ good, neutral, bad }) => {
       <div>No feedback given</div>
     )
   }
-  
+
   return (
-    <>
-    <div>good {good}</div>
-    <div>neutral {neutral}</div>
-    <div>bad {bad}</div>
     <div>
-      average {(good - bad) / (good + neutral + bad)}
+      <StatisticLine text='good' value={good} />
+      <StatisticLine text='neutral' value={neutral} />
+      <StatisticLine text='bad' value={bad} />
+      <StatisticLine text='average' value={(good - bad) / 
+        (good + neutral + bad)} />
+      <StatisticLine text='positive' value={100 * good / 
+        (good + neutral + bad)} unit='%' />
     </div>
-    <div>
-      positive {100 * good / (good + neutral + bad)} %
-    </div>
-    </>
   )
 }
+
+const StatisticLine = ({ text, value, unit }) =>
+  <div>{text} {value} {unit}</div>
 
 const App = () => {
   // tallenna napit omaan tilaansa
