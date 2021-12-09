@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 // Display only the common name of a given country
 const CountryName = ({ country }) => {
+    const [showInfo, setShowInfo] = useState(false)
+    const handleClick = () => setShowInfo(true)
+
+    if (showInfo) {
+        return <CountryInfo country={country} />
+    }
+
     return (
         <div>
             {country.name.common}
+            <button onClick={() => handleClick(country)}>
+                show
+            </button>
         </div>
     )
 }
@@ -45,7 +55,7 @@ const ListCountries = ({ countries }) => {
 
 
     } else if (countries.length <= 10) {
-        // sort countries alphabetically
+        // sort country names alphabetically
         countries.sort(function(a, b) {
             let nameA = a.name.common.toUpperCase()
             let nameB = b.name.common.toUpperCase()
