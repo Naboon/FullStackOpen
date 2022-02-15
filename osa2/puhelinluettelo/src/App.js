@@ -24,9 +24,16 @@ const App = () => {
     
     if (persons.some(person => 
       person.name === newName)) {
-      return (
-        window.alert(`${newName} is already added to phonebook`)
-      )
+      
+      if (window.confirm(`${newName} is already added to phonebook, replace
+        the old number with a new one?`)) {
+        
+        const knownPerson = persons.find(person =>
+          person.name === newName)
+
+        return changeNumber(knownPerson.id, newNumber)
+      }
+      
     }
 
     const personObject = {
@@ -43,18 +50,32 @@ const App = () => {
       })
   }
 
+  const changeNumber = (id, newNumber) => {
+    const person = persons.find(n => n.id === id)
+    const changedPerson = { ...person, number: newNumber }
+
+    phoneBookService
+          .update(id, changedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id !== id ? person: returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+  }
+
   const handleRemove = (id, name) => {
     
-    if (window.confirm(`Delete ${name}?`))
-    phoneBookService
-      .remove(id)
-      .then(() => {
-        setPersons(persons.filter(n => n.id !== id))
-      })
-      .catch(error => {
-        console.log('person not found in the database')
-        setPersons(persons.filter(n => n.id !== id))
-      })
+    if (window.confirm(`Delete ${name}?`)) {
+      phoneBookService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(n => n.id !== id))
+        })
+        .catch(error => {
+          console.log('person not found in the database')
+          setPersons(persons.filter(n => n.id !== id))
+        })
+      }
   }
 
   const handleNameChange = (event) => 
