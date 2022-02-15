@@ -81,10 +81,6 @@ const CountryInfo = ({ country }) => {
         </div>
     )
 }
-/*<img src={weather.icon}
-                 alt="Weather icon" />
-
-            <b>wind:</b> {weather.wind_mph} direction {wind_dir}*/
 
 const ListCountries = ({ countries }) => {
 // List all the countries that are given and show different information depending
