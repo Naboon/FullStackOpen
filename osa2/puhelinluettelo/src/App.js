@@ -41,8 +41,20 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+  }
 
+  const handleRemove = (id, name) => {
     
+    if (window.confirm(`Delete ${name}?`))
+    phoneBookService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(n => n.id !== id))
+      })
+      .catch(error => {
+        console.log('person not found in the database')
+        setPersons(persons.filter(n => n.id !== id))
+      })
   }
 
   const handleNameChange = (event) => 
@@ -76,7 +88,9 @@ const App = () => {
       
       <h2>Numbers</h2>
       
-      <ListPersons persons={personsShown} />
+      <ListPersons persons={
+        personsShown}
+        handleRemove={handleRemove} />
     </div>
   )
 }
