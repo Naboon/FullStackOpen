@@ -3,6 +3,7 @@ import phoneBookService from './services/persons'
 import ListPersons from './components/ListPersons'
 import PersonForm from './components/PersonsForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 
   
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     phoneBookService
@@ -32,6 +34,10 @@ const App = () => {
           person.name === newName)
 
         return changeNumber(knownPerson.id, newNumber)
+      } else {
+        setNewName('')
+        setNewNumber('')
+        return
       }
       
     }
@@ -45,6 +51,10 @@ const App = () => {
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setErrorMessage(`Added ${returnedPerson.name}`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
         setNewName('')
         setNewNumber('')
       })
@@ -58,6 +68,10 @@ const App = () => {
           .update(id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id !== id ? person: returnedPerson))
+            setErrorMessage(`Updated number for ${newName}`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
             setNewName('')
             setNewNumber('')
           })
@@ -70,6 +84,10 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(n => n.id !== id))
+          setErrorMessage(`Removed ${name}`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.log('person not found in the database')
@@ -95,6 +113,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} />
 
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       
